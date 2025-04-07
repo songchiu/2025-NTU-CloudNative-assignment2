@@ -26,13 +26,12 @@ jobs:
         -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
         jekyll/builder:latest /bin/bash -c "chmod -R 777 /srv/jekyll && jekyll build --future"
 
-    - name: First interaction
-      uses: actions/first-interaction@v1.3.0
+    - name: Add comment to PR
+      if: github.event_name == 'pull_request'
+      uses: peter-evans/create-or-update-comment@v4
       with:
-        # Token for the repository. Can be passed in using {{ secrets.GITHUB_TOKEN }}
-        repo-token: 
-        # Comment to post on an individual's first issue
-        issue-message: # optional
-        # Comment to post on an individual's first pull request
-        pr-message: # optional
+        token: ${{ secrets.GITHUB_TOKEN }}
+        issue-number: ${{ github.event.pull_request.number }}
+        body: "Thanks for the PR! 🎉"
+
               
